@@ -14,19 +14,19 @@ class Key extends Item {
     y0 = Guards.get(ChooseGuard).y - 50;
     y1 = Guards.get(ChooseGuard).y;
     y2 = Guards.get(ChooseGuard).y + 50;
-    if (Guards.get(ChooseGuard).D == 0 ) {
+    if (Guards.get(ChooseGuard).rotateGuard == 0 ) {
       ellipse(x0, y0, size, size);
       imageMode(CENTER);
       image(KeyIMG, x0, y0, size, size);
-    } else if (Guards.get(ChooseGuard).D == 1 ) {
+    } else if (Guards.get(ChooseGuard).rotateGuard == -PI/2) {
       ellipse(x1, y1, size, size);
       imageMode(CENTER);
       image(KeyIMG, x1, y1, size, size);
-    } else if (Guards.get(ChooseGuard).D == 2 ) {
+    } else if (Guards.get(ChooseGuard).rotateGuard == PI ) {
       ellipse(x0, y2, size, size);
       imageMode(CENTER);
       image(KeyIMG, x0, y2, size, size);
-    } else if (Guards.get(ChooseGuard).D == 3 ) {
+    } else if (Guards.get(ChooseGuard).rotateGuard == PI/2 ) {
       ellipse(x3, y1, size, size);
       imageMode(CENTER);
       image(KeyIMG, x3, y1, size, size);

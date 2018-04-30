@@ -6,7 +6,7 @@ class Floor {
   int FloorSize2 = int(random(50, 100));
   float TotalFloor;
 
-  void display() {
+  public void display() {
     if (FloorType == 1) {
       for (int f = 0; f < 800; f += 50) {
         for (int g = 50; g < 550; g += 50) {

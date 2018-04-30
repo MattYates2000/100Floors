@@ -12,7 +12,7 @@ class GSensor {
   }
   void display() { 
     fill(255, 255, 100);
-    arc(GuardX, GuardY, Length, Length, Start, Stop);
+    arc(GuardX,GuardY, Length, Length, Start, Stop);
   }
 
 

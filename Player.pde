@@ -1,11 +1,12 @@
-public class Player {
-  float x;
-  float y;
+public class Player extends Entity{
   float MoveRight;
   float MoveDown;
   float MoveLeft;
   float MoveUp;
-  float size; 
+  float XradPos;
+  float YradPos; 
+  float XradNeg;
+  float YradNeg;
   float DPGx;
   float DPGx2;
   float DPGy;
@@ -13,46 +14,63 @@ public class Player {
   float DPI;
   float DPK;
   float Speed;
+  float BaseSpeed = 1.5;
+  int SpeedBoost = 3;
   float rotatePlayer;
+  int TimeBoostUsedFor;
+  boolean HasBoost = true;
+  int WhenBoostUsed;
 
 
   Player() {
     x = 120;
     y = random(120, 600);
-    size = 20;
-    Speed = 1.5;
+    Speed = BaseSpeed;
   }
 
-  void moving(int player) {
-    print(Speed);
+  void movement(int player) {
+    
+    XradPos = this.x + size/2;
+    XradNeg = this.x - size/2;
+    YradPos = this.y + size/2;
+    YradNeg = this.y - size/2;
     if (((player == 0) && (key == 'S' | key == 's')) || ((player == 1) && (keyCode == DOWN))) {
-      if (this.y + size/2 > height-100) {
-        MoveDown = 0;
+      if (YradPos > height-100) {
+        MoveDown = -Speed;
       } else { 
         MoveDown = Speed;
       }
     } else if (((player == 0) && (key == 'A' | key == 'a')) || ((player == 1) && (keyCode == LEFT))) {
-      if (this.x - size/2 < 100) {
-        MoveLeft = 0;
+      if (XradNeg < 100) {
+        MoveLeft = -Speed;
       } else {
         MoveLeft = Speed;
       }
     } else if (((player == 0) && (key == 'D' | key == 'd'))  || ((player == 1) && (keyCode == RIGHT))) {
-      if (this.x + size/2 > width-100) {
-        MoveRight = Speed;
+      if (XradPos > width-50) {
+        MoveRight = -Speed;
       } else {
         MoveRight = Speed;
       }
     } else if (((player == 0) && (key == 'W'| key == 'w')) || ((player == 1) && (keyCode == UP))) {
-      if (this.y - size/2 < 100) {
-        MoveUp = 0;
+      if (YradNeg < 100) {
+        MoveUp = -Speed;
       } else {
         MoveUp = Speed;
       }
     }
+    if ((MoveUp == MoveRight) || (MoveUp == MoveLeft) || (MoveDown == MoveRight) || (MoveDown == MoveLeft))  {
+      if (Speed == BaseSpeed) {
+        Speed = sqrt(sq(BaseSpeed)/2);
+      }
+      if (Speed == SpeedBoost) {
+        Speed = sqrt(sq(SpeedBoost)/2);
+      }
+    }
   }
 
-  void notmoving(int player) {
+
+  void nomovement(int player) {
     if (((player == 0) && (key == 'D' | key == 'd')) || ((player == 1) && (keyCode == RIGHT))) {
       MoveRight = 0;
     } else if (((player ==0) && (key == 'S' | key == 's')) || ((player == 1) && (keyCode == DOWN))) {
@@ -65,9 +83,21 @@ public class Player {
   }
 
   void display() {
+    XradPos = this.x + size/2;
+    XradNeg = this.x - size/2;
+    YradPos = this.y + size/2;
+    YradNeg = this.y - size/2;
+    if (millis() > WhenBoostUsed + 1000) {
+      Speed = BaseSpeed; 
+    }    
+    if (millis() > WhenBoostUsed + 5000) {
+      BoostBar.fillBar();
+      HasBoost = true;
+    }
     fill(256, 0, 0);
     x += (MoveRight-MoveLeft)*Speed;
     y += (MoveDown-MoveUp)*Speed;
+    imageMode(CENTER);
     ellipse(x, y, size, size);
     pushMatrix();
     translate(x, y);
@@ -82,25 +112,25 @@ public class Player {
       DPGx2 = this.x - Guards.get(i).x;
       DPGy = this.y - Guards.get(i).y; 
       DPGy2 = abs(this.y - Guards.get(i).y);
-      if (Guards.get(i).D == 0) {
+      if (Guards.get(i).rotateGuard == 0) {
         DPK = dist(this.x, this.y, K.x0, K.y0);
         if ((DPGx < 50)  && (DPGy < 50) && (DPGy > 0)) {
           GameOver.play();
-          GameOver();
+          Game = 4;
         }
-      } else if (Guards.get(i).D == 1) {
+      } else if (Guards.get(i).rotateGuard == -PI/2) {
         DPK = dist(this.x, this.y, K.x1, K.y1);
         if ((DPGx2 < 50 ) && (DPGx2 > 0 ) && (DPGy2 < 50)) {
           GameOver.play();
           Game = 4;
         }
-      } else if (Guards.get(i).D == 2 ) {
+      } else if (Guards.get(i).rotateGuard == PI ) {
         DPK = dist(this.x, this.y, K.x0, K.y2);
         if ((DPGx < 50 ) && (DPGy > -50) && (DPGy < 0 )) {
           GameOver.play();
           Game = 4;
         }
-      } else if (Guards.get(i).D == 3) {
+      } else if (Guards.get(i).rotateGuard == PI/2) {
         DPK = dist(this.x, this.y, K.x3, K.y1);
         if ((DPGx2 > -50) && (DPGx2 < 0) && (DPGy2 < 50)) {
           GameOver.play();
@@ -108,6 +138,10 @@ public class Player {
         }
       }
     }
+
+  }
+
+  void PlayerCheckItems() {
     if (Items.size() == 0) {
       if (DPK < size+15) {
         fill(0);
@@ -135,4 +169,17 @@ public class Player {
       }
     }
   }
+
+  public void Boost() { 
+    if (!HasBoost) return;
+    WhenBoostUsed = millis();
+    for(int w = 0; w < Walls.size(); w ++) {
+      Walls.get(w).Goback = 5;
+    }
+    BoostBar.drainBar();
+    Speed = SpeedBoost;
+    HasBoost = false;
+  }
 }
+
+ 

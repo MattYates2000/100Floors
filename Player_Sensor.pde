@@ -9,8 +9,13 @@ class Sensor {
     Length = 100;
   }
 
-  void display() { 
-    fill(0, 256, 0);   
+  void display(int player) { 
+    if (player == 0) {
+      fill(0, 256, 0);   
+    }
+    if (player == 1) {
+      fill(0,0,256);
+    }
     arc(PlayerX,PlayerY, Length, 100, Start, Stop);
   }
 

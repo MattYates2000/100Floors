@@ -1,7 +1,4 @@
-class Item {  
-  float x;
-  float y;
-  float size; 
+class Item extends Entity{  
   float DI;
   int Start;
   int Chance;
@@ -13,7 +10,6 @@ class Item {
       x = random(Players.get(p).x + 100, width-120); 
     }
     y = random(120, height-120);
-    size = 20;
   }
 
   void display() {
@@ -31,16 +27,28 @@ class Item {
     }
     ellipse(x, y, size, size);
   }
+  
+  void randomPos() {
+    for (int p = 0; p < Players.size(); p++) {
+      x = random(Players.get(p).x + 100, width-120); 
+    }
+    
+    y = random(120, height-120);
+  }
 
   void SameCell() {
     Start = 0;
-    for (int i = 0; i < Items.size (); i ++) {
+    for (int i = 0; i < Items.size(); i ++) {
       Start = Start + 1;
       for (int j = Start; j < Items.size (); j++) {
         DI = dist(Items.get(i).x, Items.get(i).y, Items.get(j).x, Items.get(j).y);
         if (DI < size+150) { 
-          Items.remove(i);
-          Items.add(new Item());
+          if (object == "Item") {
+            Items.remove(j);
+          }
+          else {
+            Items.get(j).randomPos();
+          }
         }
       }
     }

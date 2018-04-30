@@ -1,7 +1,8 @@
-public class Guard {
-  public float x;
-  public float y;
-  float size; 
+public class Guard extends Entity {
+  float XradPos;
+  float YradPos; 
+  float XradNeg;
+  float YradNeg;
   float DG;
   int Start;
   int Move; 
@@ -21,7 +22,6 @@ public class Guard {
     Move = int(random(-0.5,3.5));
     Change = int(random(0, 200));
     Speed = random(1,2.5); 
-    size = 20;
   }
 
   void movement() { 
@@ -36,44 +36,49 @@ public class Guard {
     }
     if (Move== 2) {
       rotateGuard = 0;
-      D = 0; 
-      y = y + Speed;
-      GuardCheckGuard();
+      y = y + Speed;      
       if (this.y + size/2 >= height-100) {
         Move= int(random(-0.5,3.5));
       }
     } else if (Move== 0) {
-      D = 2;
+      rotateGuard = PI;
       y = y - Speed;
-      GuardCheckGuard();
       if (this.y - size/2 <= 100) {
         Move= int(random(-0.5,3.5));
       }
     } else if (Move== 3) {
-      D = 1;
+      rotateGuard = -PI/2;
       x = x + Speed;
-      GuardCheckGuard();
       if (this.x + size/2 >= width-100) {
         Move= int(random(-0.5,3.5));
       }
     } else if (Move== 1) {
-      GuardCheckGuard();
-      D = 3;
+      rotateGuard = PI/2;
       x = x - Speed;
 
       if (this.x - size/2 <= 100) {
         Move= int(random(-0.5, 3.5));
       }
     }
+    GuardCheckGuard();
     Change = int(random(0, 200));
   }
 
   void display() {
+    XradPos = this.x + size/2;
+    XradNeg = this.x - size/2;
+    YradPos = this.y + size/2;
+    YradNeg = this.y - size/2;
     fill(0);
     ellipse(x, y, size, size);
     imageMode(CENTER);
-    image(GuardIMG, x, y, size+40, size+40);
+    pushMatrix();
+    translate(x, y);
+    rotate(rotateGuard);
+    image(GuardIMG, 0, 0, size+40, size+40);
+    popMatrix();
   }
+
   void GuardCheckGuard() {
     Start = 0;
     for (int i = 0; i < Guards.size (); i ++) {

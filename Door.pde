@@ -14,7 +14,7 @@ class Door {
     } else {
       fill(182, 155, 76);
     }
-    quad(width-100, 320, width-100, 380, width-40, 440, width-40, 275);
+    image(Door,width-50,height/2,100,150);
   }
 
   void UnlockDoor() {
@@ -35,6 +35,7 @@ class Door {
         UncommonNO = 0;
         RareNO = 0;
         Game = 2;
+        Players.get(p).Speed = Players.get(p).BaseSpeed;
       }
     }
   }
