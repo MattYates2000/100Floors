@@ -21,8 +21,8 @@ public float GuardY;
 public float PlayerX;
 public float PlayerY;
 
-public int GuardNO = int(random(3,6));
-public int ItemNO = int(random(3,7));
+public int GuardNO = 1;
+public int ItemNO = 0;
 public int WallNO = 0;
 public int SensorNO = 1; 
 public int PlayerNO = 1;
@@ -70,7 +70,7 @@ PImage PlayerIMG;
 PImage Door;
 
 void setup() {
-  WallNO = 3;
+  WallNO = int(random(-0.5,4.5));
   frameRate(60);
   size(1000,700);
   GSensors = new ArrayList<GSensor>();
@@ -117,10 +117,7 @@ void setup() {
 
 
 void draw() {
-    print(User1);
-  if (Game == 0) { 
-    Map();
-  } else if (Game == 1) {
+  if (Game == 1) {
     Menu();
   } else if (Game == 2) {
     NextLevel();
@@ -388,6 +385,10 @@ void DisplayObjects() {
     Players.get(player).PlayerCheckItems();
   }
   if (PlayableGuardactive == true) {
+    Sensors.add(new Sensor());
+    PlayerX = PlayableGuard.x;
+    PlayerY = PlayableGuard.y;
+    Sensors.get(Sensors.size());
     PlayableGuard.display();
   }
   if (Items.size() == 0) {
@@ -635,8 +636,8 @@ void LevelEditor() {
       rect(360,height - 95,80,90);
       object = "Wall";
     }
-    if (keyCode = BACKSPACE) {
-      if (object = "Wall") {
+    if (keyCode == BACKSPACE) {
+      if (object == "Wall") {
         Walls.remove(Walls.size()-1);
       }
     }

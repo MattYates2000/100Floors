@@ -39,8 +39,8 @@ public float GuardY;
 public float PlayerX;
 public float PlayerY;
 
-public int GuardNO = PApplet.parseInt(random(3,6));
-public int ItemNO = PApplet.parseInt(random(3,7));
+public int GuardNO = 1;
+public int ItemNO = 0;
 public int WallNO = 0;
 public int SensorNO = 1; 
 public int PlayerNO = 1;
@@ -88,7 +88,7 @@ PImage PlayerIMG;
 PImage Door;
 
 public void setup() {
-  WallNO = 3;
+  WallNO = PApplet.parseInt(random(-0.5f,4.5f));
   frameRate(60);
   
   GSensors = new ArrayList<GSensor>();
@@ -135,10 +135,7 @@ public void setup() {
 
 
 public void draw() {
-    print(User1);
-  if (Game == 0) { 
-    Map();
-  } else if (Game == 1) {
+  if (Game == 1) {
     Menu();
   } else if (Game == 2) {
     NextLevel();
@@ -406,6 +403,10 @@ public void DisplayObjects() {
     Players.get(player).PlayerCheckItems();
   }
   if (PlayableGuardactive == true) {
+    Sensors.add(new Sensor());
+    PlayerX = PlayableGuard.x;
+    PlayerY = PlayableGuard.y;
+    Sensors.get(Sensors.size());
     PlayableGuard.display();
   }
   if (Items.size() == 0) {
@@ -629,21 +630,6 @@ public void Player2() {
   image(GuardIMG, 650, 500, 100, 100);
 }
 
-
-
-public void Save() {
-}
-
-public void ExistingUser() {
-}
-
-public void Map(){
-  scale(zoom);
-  translate(0,0);
-}
-
-
-
 public void LevelEditor() {
   DisplayGame();
   float DifferenceinMouseX = mouseX - pmouseX;
@@ -668,8 +654,8 @@ public void LevelEditor() {
       rect(360,height - 95,80,90);
       object = "Wall";
     }
-    if (keyCode = BACKSPACE) {
-      if (object = "Wall") {
+    if (keyCode == BACKSPACE) {
+      if (object == "Wall") {
         Walls.remove(Walls.size()-1);
       }
     }
