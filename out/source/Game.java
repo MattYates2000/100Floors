@@ -18,23 +18,30 @@ public class Game extends PApplet {
 
 
 
-SoundFile Music;
+SoundFile Music; //This section is all the sound files
 SoundFile Button;
 SoundFile GameOver;
 SoundFile FootSteps; 
 
-Key K;
+Key K; //These are initialising all the objects 
 Door D;
 Floor F;
 BoostBar BoostBar;
+ArrayList<Guard> Guards; //This creates an array of all the object which will have more than 1 object of one class 
+ArrayList<Player> Players;
+ArrayList<Item> Items;
+ArrayList<Wall> Walls;
+ArrayList<Sensor> Sensors;
+ArrayList<GSensor> GSensors;
+PlayableGuard PlayableGuard;
 
-int Game = 1;
+int Game = 1; //This is the current function
 public int Level = 1;
 
 float Check;
 float ScaleX;
 
-public float GuardX;
+public float GuardX; //These variables get the X and Y values of the Player and the Guard
 public float GuardY;
 public float PlayerX;
 public float PlayerY;
@@ -71,14 +78,6 @@ boolean TEST = false;
 
 boolean Player2active = false;
 boolean PlayableGuardactive = false;
-
-ArrayList<Guard> Guards;
-ArrayList<Player> Players;
-ArrayList<Item> Items;
-ArrayList<Wall> Walls;
-ArrayList<Sensor> Sensors;
-ArrayList<GSensor> GSensors;
-PlayableGuard PlayableGuard;
 
 PImage GuardIMG;
 PImage KeyIMG;
@@ -216,6 +215,7 @@ public void mousePressed() {
       Game = 2;
     }
     if ((mouseX > 650) && (mouseX < 880) && (mouseY < 540) && (mouseY > 430)) {
+      TEST = false;
       TotalCommon = 0; 
       TotalUncommon = 0;
       TotalRare = 0;
@@ -403,12 +403,14 @@ public void DisplayObjects() {
     Players.get(player).PlayerCheckItems();
   }
   if (PlayableGuardactive == true) {
-    Sensors.add(new Sensor());
+    if (Sensors.size() < 3) {
+      Sensors.add(new Sensor());
+    }
     PlayerX = PlayableGuard.x;
     PlayerY = PlayableGuard.y;
-    Sensors.get(Sensors.size());
+    Sensors.get(Sensors.size()-1).display(3);
     PlayableGuard.display();
-  }
+    }
   if (Items.size() == 0) {
     if (GotKey == false) {
       K.display();
@@ -656,8 +658,9 @@ public void LevelEditor() {
     }
     if (keyCode == BACKSPACE) {
       if (object == "Wall") {
-        Walls.remove(Walls.size()-1);
+        Walls.remove(Walls.size());
       }
+
     }
     if (key == '0') { 
       Walls.clear();
@@ -1359,6 +1362,9 @@ class Sensor {
     }
     if (player == 1) {
       fill(0,0,256);
+    }
+    if (player == 3) {
+      fill(256,0,0);
     }
     arc(PlayerX,PlayerY, Length, 100, Start, Stop);
   }

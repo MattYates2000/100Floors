@@ -16,6 +16,9 @@ class Sensor {
     if (player == 1) {
       fill(0,0,256);
     }
+    if (player == 3) {
+      fill(256,0,0);
+    }
     arc(PlayerX,PlayerY, Length, 100, Start, Stop);
   }
 
